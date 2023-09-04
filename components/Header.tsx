@@ -2,30 +2,40 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { MagnifyingGlassIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import Avatar from 'react-avatar'
 
 const Header = () => {
     return (
         <header>
-            <div className='flex flex-col md:flex-row item-center p-5 bg-gray-500/10 rounded-b-2xl' >
-                <Image
-                    src="https://links.papareact.com/c2cdd5"
-                    alt='Trillo Icon'
-                    width={300}
-                    height={100}
-                    className='w-40 pd-10 md:pd:0 object-contain'
-                />
-                <div className='flex item-center space-x-5 flex-1 md:justify-end w-full  ' >
+            <div className='flex flex-col  justify-center md:flex-row item-center p-5 bg-gray-500/10 rounded-b-2xl' >
+                <div className='flex justify-center  ' >
+                    <Image
+                        src="https://links.papareact.com/c2cdd5"
+                        alt='Trillo Icon'
+                        width={300}
+                        height={100}
+                        className='w-40 pd-10 my-5 md:my-0 md:pd-0 object-contain'
+                    />
+                </div>
+                <div className='flex item-center justify-center space-x-5 flex-1 md:justify-end w-full  ' >
                     {/* search box */}
-                    <form action="" className='flex ' >
+                    <form action="" className='flex  items-center space-x-5 bg-white rounded-md p-2 shadow-md flex-1 md:flex-initial '>
                         <MagnifyingGlassIcon className='h-6 w-6 text-gray-400' />
                         <input type='text' placeholder='Search' className='flex-1 outline-none ' />
                         <button hidden >Search</button>
                     </form>
                     {/* Avatar */}
-                    <Avatar name='Tare Mokhtar' size='44' round />
+                    <Avatar name='Tare Mokhtar' size='44' round color='#0055D1' />
                 </div>
+
+
+            </div>
+            <div className='flex justify-center items-center px-5 md:py-5 ' >
+                <p className='flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1] ' >
+                    <UserCircleIcon className='h-8 w-8  text-[#0055D1] mr-1 ' />
+                    GPT summurizing your task for the day...
+                </p>
 
             </div>
         </header>
