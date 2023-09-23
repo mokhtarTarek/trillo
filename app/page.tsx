@@ -1,3 +1,4 @@
+import Board from '@/components/Board'
 import Header from '@/components/Header'
 import React from 'react'
 
@@ -7,6 +8,7 @@ const page = () => {
       {/* header */}
       <Header />
       {/* body */}
+      <Board />
       body
     </div>
   )
