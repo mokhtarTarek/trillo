@@ -4,8 +4,14 @@ import React from 'react'
 import Image from 'next/image'
 import { MagnifyingGlassIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import Avatar from 'react-avatar'
+import { useAmp } from 'next/amp'
+import { useBoardStore } from '@/store/BoardStore'
 
 const Header = () => {
+    const [searchString, setSearchString] = useBoardStore(state => [
+        state.searchString,
+        state.setSearchString
+    ])
     return (
         <header>
             <div className='flex flex-col  justify-center md:flex-row item-center p-5 bg-gray-500/10 rounded-b-2xl' >
@@ -38,7 +44,13 @@ const Header = () => {
                     {/* search box */}
                     <form action="" className='flex  items-center space-x-5 bg-white rounded-md p-2 shadow-md flex-1 md:flex-initial '>
                         <MagnifyingGlassIcon className='h-6 w-6 text-gray-400' />
-                        <input type='text' placeholder='Search' className='flex-1 outline-none ' />
+                        <input
+                            type='text'
+                            placeholder='Search'
+                            className='flex-1 outline-none'
+                            value={searchString}
+                            onChange={(e) => setSearchString(e.target.value)}
+                        />
                         <button hidden >Search</button>
                     </form>
                     {/* Avatar */}
