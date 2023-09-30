@@ -1,4 +1,4 @@
-import { databases } from '@/appwrite';
+import { databases, storage } from '@/appwrite';
 import { getTodosGroupedByColumn } from '@/lib/getTodosGroupedByColumn';
 import { create } from 'zustand'
 
@@ -7,19 +7,19 @@ interface BoardState {
     getBoard: () => void;
     setBoardState: (board: Board) => void;
     updateTodoInDB: (todo: Todo, columnId: TypedColumn) => void
-
     searchString: string;
     setSearchString: (searchString: string) => void
+    deleteTask: (taskIndex: number, todo: Todo, id: TypedColumn) => void
 }
 
-export const useBoardStore = create<BoardState>((set) => ({
+export const useBoardStore = create<BoardState>((set, get) => ({
     // INITIALIZE THE BOARD STATE
     board: {
         columns: new Map<TypedColumn, Column>() //
     },
 
     searchString: "",
-    setSearchString: (searchString) => set({ searchString }),
+
     // FETCH DATA AND GROUPE THEM BY CATEGORIES (COLUMNS)
     getBoard: async () => {
         const board = await getTodosGroupedByColumn();
@@ -27,6 +27,26 @@ export const useBoardStore = create<BoardState>((set) => ({
     },
 
     setBoardState: (board) => set({ board }),
+    setSearchString: (searchString) => set({ searchString }),
+    deleteTask: async (taskIndex, todo, id) => {
+        // create a new columns map from the existing bord 
+        const newCols = new Map(get().board.columns)
+        // delete the specifique todo 
+        newCols.get(id)?.todos.splice(taskIndex, 1)
+        // update bord
+        set({ board: { columns: newCols } })
+        // delete image from db if it exist
+        if (todo.image) {
+            await storage.deleteFile(todo.image.bucketId, todo.image.fileId)
+        }
+        //delete doc from db
+        await databases.deleteDocument(
+            process.env.NEXT_PUBLIC_DATABASE_ID!,
+            process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!,
+            todo.$id
+        )
+
+    },
     // UPDATE A DOC IN APPWRITE
     updateTodoInDB: async (todo, columnId) => {
         await databases.updateDocument(

@@ -1,17 +1,37 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { MagnifyingGlassIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 import Avatar from 'react-avatar'
 import { useAmp } from 'next/amp'
 import { useBoardStore } from '@/store/BoardStore'
+import fetchSuggestion from '@/lib/fetchSuggestion'
 
 const Header = () => {
-    const [searchString, setSearchString] = useBoardStore(state => [
+    const [board, searchString, setSearchString] = useBoardStore(state => [
+        state.board,
         state.searchString,
         state.setSearchString
     ])
+
+    // const [loading, setLoading] = useState<boolean>(false)
+    // const [suggestion, setSuggestion] = useState<string>("")
+    // fetch openai
+
+    // useEffect(() => {
+    //     if (board.columns.size === 0) return
+    //     setLoading(true);
+    //     const fetchSuggestionFunc = async () => {
+    //         const suggestion = await fetchSuggestion(board)
+    //         setSuggestion(suggestion)
+    //         setLoading(false)
+    //     }
+    //     fetchSuggestionFunc();
+
+    // }, [board])
+
+
     return (
         <header>
             <div className='flex flex-col  justify-center md:flex-row item-center p-5 bg-gray-500/10 rounded-b-2xl' >
@@ -59,13 +79,18 @@ const Header = () => {
 
 
             </div>
-            <div className='flex justify-center items-center px-5 md:py-5 ' >
-                <p className='flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1] ' >
-                    <UserCircleIcon className='h-8 w-8  text-[#0055D1] mr-1 ' />
-                    GPT summurizing your task for the day...
+            {/* <div className='flex justify-center items-center px-5 md:py-5 ' >
+                <p className='flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1]
+                ' >
+                    <UserCircleIcon className={`h-8 w-8  text-[#0055D1] mr-1  ${loading && 'animate-spin'}`} />
+                    {
+                        suggestion && !loading
+                            ? suggestion
+                            : "GPT is summarizing your tasks for the day ..."
+                    }
                 </p>
 
-            </div>
+            </div> */}
         </header>
     )
 }

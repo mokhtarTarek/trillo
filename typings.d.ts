@@ -36,6 +36,6 @@ interface Todo {
 }
 
 interface Image {
-    bucket: string;
-    filedId: string;
+    bucketId: string;
+    fileId: string;
 }
