@@ -3,6 +3,8 @@ import React from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import TodoCard from './TodoCard';
 import { useBoardStore } from '@/store/BoardStore';
+import { useModalStore } from '@/store/ModalStore';
+import { stat } from 'fs';
 type Props = {
     id: TypedColumn;
     todos: Todo[];
@@ -16,9 +18,12 @@ const idToColumnText: {
     "done": "Done"
 }
 const Column = ({ id, todos, index }: Props) => {
-    const [searchString] = useBoardStore(state => [state.searchString])
-
-
+    const [searchString, setNewTaskType] = useBoardStore(state => [state.searchString, state.setNewTaskType])
+    const openModal = useModalStore(state => state.openModal)
+    const handleAddNewTask = () => {
+        setNewTaskType(id)
+        openModal()
+    }
     return (
         <Draggable draggableId={id} index={index} >
             {(provided) => (
@@ -26,8 +31,6 @@ const Column = ({ id, todos, index }: Props) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                     ref={provided.innerRef}
-
-
                 >
                     {/* render droppable todos in the column */}
                     <Droppable droppableId={index.toString()} type="card">
@@ -81,8 +84,10 @@ const Column = ({ id, todos, index }: Props) => {
                                     })}
                                     {provided.placeholder}
                                     <div className="flex items-end justify-end p-2 ">
-                                        <button className="text-green-500 hover:text-green-600  ">
-                                            <PlusCircleIcon />
+                                        <button className="text-green-500 hover:text-green-600  "
+                                            onClick={handleAddNewTask}
+                                        >
+                                            <PlusCircleIcon className='h-10 w-10' />
                                         </button>
                                     </div>
                                 </div>

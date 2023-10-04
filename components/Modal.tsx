@@ -1,17 +1,46 @@
 'use client'
-import { useState, Fragment } from 'react'
+
+import { Fragment, useRef } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { useModalStore } from '@/store/ModalStore'
+import { useBoardStore } from '@/store/BoardStore'
+import TaskTypeRadioButton from './TaskTypeRadioButton'
+import Image from 'next/image'
+import { PhotoIcon } from '@heroicons/react/24/solid'
 
 function Modal() {
-    let [isOpen, setIsOpen] = useState(true)
+    const imagePickerRef = useRef<HTMLInputElement>(null)
+    const [newTaskInput, setNewTaskInput, newTaskType, image, setImage, addTask] = useBoardStore(state => [
+        state.newTaskInput,
+        state.setNewTaskInput,
+        state.newTaskType,
+        state.image,
+        state.setImage,
+        state.addTask,
+
+    ])
+    const [isOpen, closeModal] = useModalStore(state => [state.isOpen, state.closeModal])
+
+    const handleSubmit = (e: any) => {
+        e.preventDefault();
+
+        if (!newTaskInput) return
+        // add task              
+        addTask(newTaskInput, newTaskType, image)
+
+        setImage(null)
+        setNewTaskInput("")
+    }
 
     return (
         // Use the `Transition` component at the root level
-        <Transition show={isOpen} as={Fragment}>
-            <Dialog onClose={() => setIsOpen(false)}>
-                {/*
-          Use one Transition.Child to apply one transition to the backdrop...
-        */}
+        <Transition appear show={isOpen} as={Fragment}>
+            <Dialog onClose={closeModal}
+                onSubmit={handleSubmit}
+                as="form"
+                className='relative z-10'
+
+            >
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -23,26 +52,90 @@ function Modal() {
                 >
                     <div className="fixed inset-0 bg-black/30" />
                 </Transition.Child>
+                <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center ">
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                        >
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden  rounded-2xl bg-white p-6 text-left
+                    align-middle shadow-xl transition-all">
+                                <Dialog.Title
+                                    as="h3"
+                                    className='text-lg font-medium leading-6 text-gray-900 pb-2'
+                                >add a task
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        value={newTaskInput}
+                                        onChange={e => setNewTaskInput(e.target.value)}
+                                        placeholder='Enter a task here...'
+                                        className="w-full border border-gray-300 rounded-md outline-none p-5"
 
-                {/*
-          ...and another Transition.Child to apply a separate transition
-          to the contents.
-        */}
-                <Transition.Child
-                    as={Fragment}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 scale-95"
-                    enterTo="opacity-100 scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 scale-100"
-                    leaveTo="opacity-0 scale-95"
-                >
-                    <Dialog.Panel>
-                        <Dialog.Title>Deactivate account</Dialog.Title>
+                                    />
+                                </div>
+                                <TaskTypeRadioButton />
+                                <div>
+                                    <button
+                                        type='button'
+                                        onClick={() => imagePickerRef.current?.click()}
+                                        className='w-full border border-gray-300 rounded-md outline-none p-5 focus-visible:ring-2
+                                        focus-visible:ring-blue-500 focus-visible:ring-offset-2  '
+                                    >
+                                        <PhotoIcon className='h-6 w-6 mr-2 inline-block ' />
+                                        upload image
+                                    </button>
+                                    {
+                                        image && (
+                                            <Image
+                                                alt='image'
+                                                width={200}
+                                                height={200}
+                                                className='w-full h-44 object-cover mt-2 filter hover:grayscale transition-all 
+                                                duration-150 cursor-not-allowed '
+                                                src={URL.createObjectURL(image)}
+                                            />
+                                        )
+                                    }
+                                    <input
+                                        type='file'
+                                        hidden
+                                        ref={imagePickerRef}
+                                        onChange={(e) => {
+                                            // check if the file type is an image //  mime type
+                                            if (!e.target.files![0].type.startsWith("image/")) return
+                                            setImage(e.target.files![0])
+                                        }
+                                        }
+                                    />
+                                </div>
+                                <div className="mt-4">
+                                    <button
+                                        type='submit'
+                                        disabled={!newTaskInput}
+                                        className='inline-flex justify-center rounded-md border border-tarnsparent bg-blue-100 px-4
+                                        py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2
+                                        focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:bg-gray-100 disabled:text-gray-300    
+                                        disabled:cursor-not-allowed'
+                                    >
+                                        Add Task
+                                    </button>
+                                </div>
 
-                        {/* ... */}
-                    </Dialog.Panel>
-                </Transition.Child>
+                            </Dialog.Panel>
+
+                        </Transition.Child>
+                    </div>
+                </div>
+
+
+
             </Dialog>
         </Transition>
     )

@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
     // todos in the body of the post request
     const { todos } = await request.json()
-    console.log(todos)
+        (todos)
     // commnicate with open ai
 
     const chatCompletion = await openai.chat.completions.create({
@@ -26,8 +26,8 @@ export async function POST(request: Request) {
             }
         ],
     });
-    console.log("DATA IS :", chatCompletion)
-    console.log(chatCompletion.choices[0].message)
+    ("DATA IS :", chatCompletion)
+        (chatCompletion.choices[0].message)
     return NextResponse.json(chatCompletion.choices[0].message)
 
 }

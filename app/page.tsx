@@ -9,7 +9,7 @@ const page = () => {
       <Header />
       {/* body */}
       <Board />
-      body
+
     </div>
   )
 }

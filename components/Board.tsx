@@ -24,9 +24,9 @@ const Board = () => {
         // destination = {droppableId:column index,index:cardindex}
         // source = {droppableId:column index,index:cardindex}
         // type : column || card
-        console.log(destination)
-        console.log(source)
-        console.log(type)
+        // (destination)
+        // (source)
+        // (type)
         // check if user drag card outide of board
         if (!destination) return
 

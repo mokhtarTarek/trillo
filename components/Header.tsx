@@ -79,18 +79,19 @@ const Header = () => {
 
 
             </div>
-            {/* <div className='flex justify-center items-center px-5 md:py-5 ' >
+            <div className='flex justify-center items-center px-5 md:py-5 ' >
                 <p className='flex items-center text-sm font-light pr-5 shadow-xl rounded-xl w-fit bg-white italic max-w-3xl text-[#0055D1]
                 ' >
-                    <UserCircleIcon className={`h-8 w-8  text-[#0055D1] mr-1  ${loading && 'animate-spin'}`} />
-                    {
+                    <UserCircleIcon className={`h-8 w-8  text-[#0055D1] mr-1  `} />
+                    {/* {
                         suggestion && !loading
                             ? suggestion
                             : "GPT is summarizing your tasks for the day ..."
-                    }
+                    } */}
+                    GPT is summarizing your tasks for the day ...
                 </p>
 
-            </div> */}
+            </div>
         </header>
     )
 }

@@ -1,10 +1,12 @@
 import { databases } from "@/appwrite"
+import { json } from "stream/consumers";
 
 export const getTodosGroupedByColumn = async () => {
     const data = await databases.listDocuments(
         process.env.NEXT_PUBLIC_DATABASE_ID!,
         process.env.NEXT_PUBLIC_TODOS_COLLECTION_ID!);
     const todos = data.documents
+    // (todos)
 
     // Groupe todos list by three categorie 
     // (columns:TypedColumn:'todo,inprogress,done')
@@ -18,13 +20,14 @@ export const getTodosGroupedByColumn = async () => {
             })
         }
         // now push the todo document to the specific column
+        (todo.image)
         acc.get(todo.status)?.todos.push({
             $id: todo.$id,
             $createdAt: todo.$createdAt,
             title: todo.title,
             status: todo.status,
             // destructuring property image only if it exist
-            ...(todo.image && { image: todo.image })
+            ...(todo.image && { image: JSON.parse(todo.image) })
         }
         )
         return acc
